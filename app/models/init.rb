@@ -121,13 +121,7 @@ class Init < ApplicationRecord
         request_body["items"] = i
         request_body["payments"] = p
 
-
-        
-             
-
-        puts "====================================="
-        puts request_body.to_json 
-        puts "====================================="
+        self.processamento = request_body.to_json 
 
         uri = URI("https://delivery-center-recruitment-ap.herokuapp.com/")
 
@@ -145,6 +139,8 @@ class Init < ApplicationRecord
          # request.body = request_body.to_json
          # response = http.request(request)
          # response = JSON.parse response.body rescue next
-    end
 
+        
+    end
+    self.save
 end
