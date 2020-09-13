@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_13_183013) do
+ActiveRecord::Schema.define(version: 2020_09_13_193650) do
 
   create_table "customers", force: :cascade do |t|
     t.string "externalCore"
@@ -53,7 +53,6 @@ ActiveRecord::Schema.define(version: 2020_09_13_183013) do
     t.string "district"
     t.string "street"
     t.string "complement"
-    t.float "latitude"
     t.float "longitude"
     t.date "dtOrderCreate"
     t.integer "postalCode"
@@ -61,6 +60,8 @@ ActiveRecord::Schema.define(version: 2020_09_13_183013) do
     t.integer "customer_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.float "total_shipping"
+    t.string "latitude"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 
