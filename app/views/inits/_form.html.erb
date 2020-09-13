@@ -1,0 +1,22 @@
+<%= form_with(model: init, local: true) do |form| %>
+  <% if init.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(init.errors.count, "error") %> prohibited this init from being saved:</h2>
+
+      <ul>
+        <% init.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :entrada %>
+    <%= form.text_field :entrada %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

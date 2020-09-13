@@ -1,0 +1,39 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  externalCode: MyString
+  storeId: 1
+  subTotal: 
+  deliveryFee: 
+  total: 
+  country: MyString
+  state: MyString
+  city: MyString
+  district: MyString
+  street: MyString
+  complement: MyString
+  latitude: 
+  longitude: 
+  dtOrderCreate: 2020-09-12
+  postalCode: 1
+  number: 1
+  customer: one
+
+two:
+  externalCode: MyString
+  storeId: 1
+  subTotal: 
+  deliveryFee: 
+  total: 
+  country: MyString
+  state: MyString
+  city: MyString
+  district: MyString
+  street: MyString
+  complement: MyString
+  latitude: 
+  longitude: 
+  dtOrderCreate: 2020-09-12
+  postalCode: 1
+  number: 1
+  customer: two
