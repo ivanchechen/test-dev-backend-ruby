@@ -7,4 +7,4 @@
 
 * Rails version 6.0.3.3
 
-
+* sqlite3
