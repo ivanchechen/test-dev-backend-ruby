@@ -1,6 +1,6 @@
 class InitsController < ApplicationController
 
-  before_action :set_init, only: [:show, :edit, :update, :destroy]
+  before_action :set_init, only: [:show, :edit, :update, :destroy, :initialize]
   
   # GET /inits
   # GET /inits.json
@@ -36,8 +36,7 @@ class InitsController < ApplicationController
         format.html { render :new }
         format.json { render json: @init.errors, status: :unprocessable_entity }
       end
-      
-      @init.parsing
+      @init.initial
     end
   end
 
@@ -53,7 +52,7 @@ class InitsController < ApplicationController
         format.html { render :edit }
         format.json { render json: @init.errors, status: :unprocessable_entity }
       end 
-      @init.parsing
+     @init.initial
     end
   end
 
@@ -66,7 +65,6 @@ class InitsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.

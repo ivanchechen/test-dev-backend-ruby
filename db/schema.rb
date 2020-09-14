@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_13_193650) do
+ActiveRecord::Schema.define(version: 2020_09_14_024059) do
 
   create_table "customers", force: :cascade do |t|
     t.string "externalCore"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 2020_09_13_193650) do
     t.string "contact"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "init_id"
+    t.index ["init_id"], name: "index_customers_on_init_id"
   end
 
   create_table "inits", force: :cascade do |t|
