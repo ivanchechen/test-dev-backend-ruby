@@ -1,14 +1,15 @@
 class Init < ApplicationRecord
     require 'json'
     require 'net/http'
+    requira 'uri'
     has_one :customer
 
     def initial
         puts "imprime"
         puts @init
         @parsed = JSON.parse(self.entrada)
-        @customer = Customer.find_or_create_by(externalCore: @parsed['buyer']['id'])
-        @order = Order.find_or_create_by(externalCode: @parsed['id'])  
+        @customer = Customer.find_or_create_by(external_code: @parsed['buyer']['id'])
+        @order = Order.find_or_create_by(external_code: @parsed['id'])  
         puts @order
         self.parsing    
         self.processor_data
@@ -18,7 +19,7 @@ class Init < ApplicationRecord
     #salva dados do cliente       
     def save_customer_data
         @customer.init_id = self.id
-        @customer.externalCore = @parsed['buyer']['id']
+        @customer.external_code = @parsed['buyer']['id']
         @customer.name = @parsed['buyer']['nickname']
         @customer.email = @parsed['buyer']['email']
         @customer.contact = @parsed['buyer']['phone']['area_code'] 
@@ -29,10 +30,10 @@ class Init < ApplicationRecord
     #salva dados do pedido
     def save_order_data        
         @order.customer_id = customer.id 
-        @order.externalCode = @parsed['id']
-        @order.storeId = @parsed['store_id']
-        @order.subTotal = @parsed['total_amount']
-        @order.deliveryFee = @parsed['total_shipping']
+        @order.external_code = @parsed['id']
+        @order.store_id = @parsed['store_id']
+        @order.sub_total = @parsed['total_amount']
+        @order.delivery_fee = @parsed['total_shipping']
         @order.total_shipping = @parsed['total_shipping']
         @order.total = @parsed['total_amount_with_shipping']
         @order.country = @parsed['shipping']['receiver_address']['country']['id']
@@ -43,8 +44,8 @@ class Init < ApplicationRecord
         @order.complement = @parsed['shipping']['receiver_address']['comment']
         @order.latitude =  @parsed['shipping']['receiver_address']['latitude']
         @order.longitude =  @parsed['shipping']['receiver_address']['longitude']
-        @order.dtOrderCreate = @parsed['date_created']
-        @order.postalCode = @parsed['shipping']['receiver_address']['zip_code']
+        @order.dt_order_create = @parsed['date_created']
+        @order.postal_code = @parsed['shipping']['receiver_address']['zip_code']
         @order.number = @parsed['shipping']['receiver_address']['street_number']
         @order.save
     end
@@ -52,10 +53,10 @@ class Init < ApplicationRecord
     #salva dados do item
     def save_items_data
         @parsed["order_items"].each do |i| 
-            externalCode = i['item']['id']
-            item = Item.find_or_create_by(externalCode: externalCode)
+            external_code = i['item']['id']
+            item = Item.find_or_create_by(external_code: external_code)
             item.order_id = @order.id
-            item.externalCode = i['item']['id']
+            item.external_code = i['item']['id']
             item.name = i['item']['title']
             item.price = i['unit_price']
             item.quantity = i['quantity']
@@ -88,8 +89,7 @@ class Init < ApplicationRecord
     def processor_data
         #monta o request com dados do cliente
         c ={}
-        c["externalCode"] = @customer.externalCore
-        c["externalCode"] = @customer.externalCore
+        c["externalCode"] = @customer.external_code
         c["name"] = @customer.name
         c["email"] = @customer.email
         c["contact"] = @customer.contact
@@ -98,7 +98,7 @@ class Init < ApplicationRecord
         i = []
         @order.items.each do |item|
             aux_item = {}
-            aux_item["externalCode"] = item.externalCode
+            aux_item["externalCode"] = item.external_code
             aux_item["name"] =  item.name 
             aux_item["price"] = item.price
             aux_item["quantity"] = item.quantity
@@ -118,10 +118,10 @@ class Init < ApplicationRecord
 
         #monta o request para envio à API
         @request_body ={}
-        @request_body["externalCode"] = @order.externalCode
-        @request_body["storeId"] = @order.storeId
-        @request_body["subTotal"] = @order.subTotal
-        @request_body["deliveryFee"] = @order.deliveryFee
+        @request_body["externalCode"] = @order.external_code
+        @request_body["storeId"] = @order.store_id
+        @request_body["subTotal"] = @order.sub_total
+        @request_body["deliveryFee"] = @order.delivery_fee
         @request_body["total_shipping"] = @order.total_shipping
         @request_body["total"] = @order.total
         @request_body["country"] = @order.country
@@ -132,8 +132,8 @@ class Init < ApplicationRecord
         @request_body["complement"] = @order.complement
         @request_body["latitude"] = @order.latitude
         @request_body["longitude"] = @order.longitude
-        @request_body["dtOrderCreate"] = @order.dtOrderCreate
-        @request_body["postalCode"] = @order.postalCode
+        @request_body["dtOrderCreate"] = @order.dt_order_create
+        @request_body["postalCode"] = @order.postal_code
         @request_body["number"] = @order.number
         @request_body["customer"] = c
         @request_body["items"] = i

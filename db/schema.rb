@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_14_024059) do
+ActiveRecord::Schema.define(version: 2020_09_14_145258) do
 
   create_table "customers", force: :cascade do |t|
-    t.string "externalCore"
     t.string "name"
     t.string "email"
     t.string "contact"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "init_id"
+    t.string "external_code"
     t.index ["init_id"], name: "index_customers_on_init_id"
   end
 
@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(version: 2020_09_14_024059) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string "externalCode"
     t.string "name"
     t.float "price"
     t.integer "quantity"
@@ -40,13 +39,11 @@ ActiveRecord::Schema.define(version: 2020_09_14_024059) do
     t.integer "order_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "external_code"
     t.index ["order_id"], name: "index_items_on_order_id"
   end
 
   create_table "orders", force: :cascade do |t|
-    t.string "externalCode"
-    t.integer "storeId"
-    t.float "subTotal"
     t.float "deliveryFee"
     t.float "total"
     t.string "country"
@@ -56,7 +53,6 @@ ActiveRecord::Schema.define(version: 2020_09_14_024059) do
     t.string "street"
     t.string "complement"
     t.float "longitude"
-    t.date "dtOrderCreate"
     t.integer "postalCode"
     t.integer "number"
     t.integer "customer_id", null: false
@@ -64,6 +60,12 @@ ActiveRecord::Schema.define(version: 2020_09_14_024059) do
     t.datetime "updated_at", precision: 6, null: false
     t.float "total_shipping"
     t.string "latitude"
+    t.integer "store_id"
+    t.float "sub_total"
+    t.float "delivery_fee"
+    t.date "dt_order_create"
+    t.integer "postal_code"
+    t.string "external_code"
     t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 
