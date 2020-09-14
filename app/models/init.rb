@@ -1,20 +1,23 @@
 class Init < ApplicationRecord
+    
+    include InitsHelper
     require 'json'
     require 'net/http'
-    requira 'uri'
+    require 'uri'
+    require 'time'
     has_one :customer
 
     def initial
-        puts "imprime"
-        puts @init
-        @parsed = JSON.parse(self.entrada)
-        @customer = Customer.find_or_create_by(external_code: @parsed['buyer']['id'])
+        @parsed = JSON.parse(self.entrada)       
+                   
+        @customer = Customer.find_or_create_by(external_code: @parsed['buyer']['id']) 
         @order = Order.find_or_create_by(external_code: @parsed['id'])  
         puts @order
         self.parsing    
         self.processor_data
         self.send_request
     end
+
 
     #salva dados do cliente       
     def save_customer_data
@@ -24,12 +27,17 @@ class Init < ApplicationRecord
         @customer.email = @parsed['buyer']['email']
         @customer.contact = @parsed['buyer']['phone']['area_code'] 
         @customer.contact.concat(@parsed['buyer']['phone']['number'])
+        rescue Exception => e
+        self.processamento = "Erro"
+        puts e.message
+        
+        self.save
         @customer.save
     end       
 
     #salva dados do pedido
     def save_order_data        
-        @order.customer_id = customer.id 
+        @order.customer_id = @customer.id 
         @order.external_code = @parsed['id']
         @order.store_id = @parsed['store_id']
         @order.sub_total = @parsed['total_amount']
@@ -147,12 +155,15 @@ class Init < ApplicationRecord
     def send_request
 
         uri = URI("https://delivery-center-recruitment-ap.herokuapp.com/")
-
+        time = Time.now
+        time = format_date(time)
+        header = {"Content-Type": "X-Sent #{time}"}
+        
         # Cria os parâmetros http
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
 
-        request = Net::HTTP::Post.new("https://delivery-center-recruitment-ap.herokuapp.com/", {'Content-Type' => 'application/json'})
+        request = Net::HTTP::Post.new("https://delivery-center-recruitment-ap.herokuapp.com/", header)
         request.body = @request_body.to_json
         response = http.request(request)
 
